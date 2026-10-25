@@ -11,28 +11,30 @@ pipeline {
 
         stage('Build') {
             steps {
-                bat 'if not exist output mkdir output'
-                bat 'echo Build completed > output\\build.txt'
+                sh 'mkdir -p output'
+                sh 'echo Build completed > output/build.txt'
+                echo 'Build completed successfully'
             }
         }
 
         stage('Test') {
             steps {
-                bat 'if exist output\\build.txt (exit /b 0) else (exit /b 1)'
+                sh 'test -f output/build.txt'
                 echo 'Basic test passed'
             }
         }
 
         stage('Package') {
             steps {
-                powershell 'Compress-Archive -Path output -DestinationPath application-artifact.zip -Force'
+                sh 'tar -czf application-artifact.tar.gz output'
+                echo 'Package created successfully'
             }
         }
     }
 
     post {
         success {
-            archiveArtifacts artifacts: 'application-artifact.zip'
+            archiveArtifacts artifacts: 'application-artifact.tar.gz'
         }
     }
 }
