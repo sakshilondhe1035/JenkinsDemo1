@@ -1,0 +1,2 @@
+My First Jenkins Project
+This project demonstrates an automated Jenkins pipeline.
